@@ -80,4 +80,30 @@
 #define CONFIG_USB_OHCI_NEW
 #define CONFIG_SYS_USB_OHCI_MAX_ROOT_PORTS	1
 
+#undef CONFIG_EXTRA_ENV_SETTINGS
+#define CONFIG_EXTRA_ENV_SETTINGS \
+	"scriptaddr=0x00500000\0" \
+	"fdt_addr_r=0x08300000\0" \
+	"kernel_addr_r=0x00280000\0" \
+	"bootdelay=1\0" \
+	"bootcmd=run boot_main; run boot_restore; rockusb 0 mmc 0\0" \
+	"console=ttyFIQ0,1500000n8\0" \
+	"loglevel=8\0" \
+	"bootenv=/uEnv-rk3399.txt\0" \
+	"kernel=/Image-rk3399\0" \
+	"fdtbin=/modduox-rk3399.dtb\0" \
+	"boot_image=booti ${kernel_addr_r} - ${fdt_addr_r}\0" \
+	"setbootargs=setenv bootargs console=${console} init=/sbin/init root=${root} loglevel=${loglevel} ${extraargs}\0" \
+	"main_bootargs=setenv root \"/dev/mmcblk1p4\"\0" \
+	"main_loadbootenv=ext4load mmc 0:4 ${scriptaddr} /boot${bootenv}; env import ${scriptaddr} ${filesize}\0" \
+	"main_script=ext4load mmc 0:4 ${fdt_addr_r} /boot${fdtbin}\0" \
+	"main_kernel=ext4load mmc 0:4 ${kernel_addr_r} /boot${kernel}\0" \
+	"boot_main=run main_bootargs main_loadbootenv main_script main_kernel setbootargs boot_image\0" \
+	"restore_bootargs=setenv root \"\"\0" \
+	"restore_loadbootenv=fatload mmc 0:3 ${scriptaddr} ${bootenv}; env import ${scriptaddr} ${filesize}\0" \
+	"restore_script=fatload mmc 0:3 ${fdt_addr_r} ${fdtbin}\0" \
+	"restore_kernel=fatload mmc 0:3 ${kernel_addr_r} ${kernel}\0" \
+	"boot_restore=run restore_bootargs restore_loadbootenv restore_script restore_kernel setbootargs boot_image\0" \
+	"loadbootenv=echo\0"
+
 #endif

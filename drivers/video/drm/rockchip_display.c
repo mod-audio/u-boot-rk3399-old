@@ -142,6 +142,7 @@ static void init_display_buffer(ulong base)
 	memory_end = memory_start;
 }
 
+#ifdef CONFIG_ROCKCHIP_RESOURCE_IMAGE
 static void *get_display_buffer(int size)
 {
 	unsigned long roundup_memory = roundup(memory_end, PAGE_SIZE);
@@ -157,16 +158,19 @@ static void *get_display_buffer(int size)
 
 	return buf;
 }
+#endif
 
 static unsigned long get_display_size(void)
 {
 	return memory_end - memory_start;
 }
 
+#ifdef CONFIG_ROCKCHIP_RESOURCE_IMAGE
 static bool can_direct_logo(int bpp)
 {
 	return bpp == 24 || bpp == 32;
 }
+#endif
 
 static int connector_phy_init(struct display_state *state,
 			      struct public_phy_data *data)
@@ -925,6 +929,8 @@ static int load_kernel_bmp_logo(struct logo_info *logo, const char *bmp_name)
 	logo->mem = dst;
 
 	return 0;
+#else
+	return -ENOSYS;
 #endif
 }
 

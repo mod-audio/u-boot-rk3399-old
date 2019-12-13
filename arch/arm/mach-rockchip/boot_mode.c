@@ -131,42 +131,11 @@ void boot_devtype_init(void)
 void rockchip_dnl_mode_check(void)
 {
 	/* recovery key or "ctrl+d" */
-	if (rockchip_dnl_key_pressed() ||
-	    is_hotkey(HK_ROCKUSB_DNL)) {
-		printf("download key pressed... ");
-		if (rockchip_u2phy_vbus_detect() > 0) {
-			printf("entering download mode...\n");
-			/* If failed, we fall back to bootrom download mode */
-			run_command_list("rockusb 0 ${devtype} ${devnum}", -1, 0);
-			set_back_to_bootrom_dnl_flag();
-			do_reset(NULL, 0, 0, NULL);
-		} else {
-			printf("\n");
-#ifdef CONFIG_RKIMG_BOOTLOADER
-			/* If there is no recovery partition, just boot on */
-			struct blk_desc *dev_desc;
-			disk_partition_t part_info;
-			int ret;
-
-			dev_desc = rockchip_get_bootdev();
-			if (!dev_desc) {
-				printf("%s: dev_desc is NULL!\n", __func__);
-				return;
-			}
-
-			ret = part_get_info_by_name(dev_desc,
-						    PART_RECOVERY,
-						    &part_info);
-			if (ret < 0) {
-				debug("%s: no recovery partition\n", __func__);
-				return;
-			}
-#endif
-			printf("recovery key pressed, entering recovery mode!\n");
-			env_set("reboot_mode", "recovery");
-		}
-	} else if (is_hotkey(HK_FASTBOOT)) {
-		env_set("reboot_mode", "fastboot");
+	if (rockchip_dnl_key_pressed() || is_hotkey(HK_ROCKUSB_DNL)) {
+		printf("entering download mode...\n");
+		run_command_list("rockusb 0 ${devtype} ${devnum}", -1, 0);
+		set_back_to_bootrom_dnl_flag();
+		do_reset(NULL, 0, 0, NULL);
 	}
 }
 

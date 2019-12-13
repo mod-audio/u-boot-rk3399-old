@@ -82,6 +82,8 @@
 
 #undef CONFIG_EXTRA_ENV_SETTINGS
 #define CONFIG_EXTRA_ENV_SETTINGS \
+	"devtype=mmc\0" \
+	"devnum=0\0" \
 	"scriptaddr=0x00500000\0" \
 	"fdt_addr_r=0x08300000\0" \
 	"kernel_addr_r=0x00280000\0" \

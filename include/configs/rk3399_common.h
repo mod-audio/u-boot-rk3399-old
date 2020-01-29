@@ -91,9 +91,9 @@
 	"bootcmd=run boot_main; run boot_restore; rockusb 0 mmc 0\0" \
 	"console=ttyFIQ0,1500000n8\0" \
 	"loglevel=8\0" \
-	"bootenv=/uEnv-rk3399.txt\0" \
-	"kernel=/Image-rk3399\0" \
-	"fdtbin=/modduox-rk3399.dtb\0" \
+	"bootenv=/uEnv-gr-rk3399.txt\0" \
+	"kernel=/Image-gr-rk3399\0" \
+	"fdtbin=/modduox-gr-rk3399.dtb\0" \
 	"boot_image=booti ${kernel_addr_r} - ${fdt_addr_r}\0" \
 	"setbootargs=setenv bootargs console=${console} init=/sbin/init root=${root} loglevel=${loglevel} ${extraargs}\0" \
 	"main_bootargs=setenv root \"/dev/mmcblk1p4\"\0" \
